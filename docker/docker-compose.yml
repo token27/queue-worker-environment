@@ -1,0 +1,103 @@
+version: '3'
+networks:
+    workers:
+services:
+    worker-tasker:
+        build:
+            context: .
+            dockerfile: ./apache/Dockerfile
+            args:
+                DB_HOST: ${DB_HOST}
+                DB_DATABASE: ${DB_DATABASE}
+                DB_USERNAME: ${DB_USERNAME}
+                DB_PASSWORD: ${DB_PASSWORD}
+        depends_on:
+            - mysql
+            - redis
+        restart: always # always, on-failure
+        command:
+            - apache2-worker-start.sh
+        volumes:
+            - "./bash/worker-create-database-tables.sh:/usr/local/bin/apache2-worker-create-database-tables.sh"
+            - "./bash/worker-start.sh:/usr/local/bin/apache2-worker-start.sh"
+            - "./config/app_local.php:/var/www/html/config/app_local.php"
+            - "./config/app_queued.php:/var/www/html/config/app_queued.php"
+            - "./config/000-default.conf:/etc/apache2/sites-available/000-default.conf"
+            - ./tasks:/var/www/html/src/Shell/Task
+            #- ./tasks:/var/www/html/vendor/token27/cakephp-queued-plugin/src/Shell/Task
+        networks:
+            - workers
+    apache:
+        build:
+            context: .
+            dockerfile: ./apache/Dockerfile
+            args:
+                DB_HOST: ${DB_HOST}
+                DB_DATABASE: ${DB_DATABASE}
+                DB_USERNAME: ${DB_USERNAME}
+                DB_PASSWORD: ${DB_PASSWORD}
+#        environment:
+#                DB_HOST: ${DB_HOST}
+#                DB_DATABASE: ${DB_DATABASE}
+#                DB_USERNAME: ${DB_USERNAME}
+#                DB_PASSWORD: ${DB_PASSWORD}
+        restart: always
+        depends_on:
+            - mysql
+            - redis
+        ports:
+            - "8080:80"
+        volumes:
+            - "./bash/worker-start.sh:/usr/local/bin/apache2-worker.sh"
+            - "./bash/create-plugin-tables.sh:/usr/local/bin/apache2-create-tables.sh"
+            - "./config/app_local.php:/var/www/html/config/app_local.php"
+            - "./config/000-default.conf:/etc/apache2/sites-available/000-default.conf"
+            - "./config/app_queued.php:/var/www/html/config/app_queued.php"
+            - ./tasks:/var/www/html/src/Shell/Task
+            #- ./tasks:/var/www/html/vendor/token27/cakephp-queued-plugin/src/Shell/Task
+        networks:
+            - workers
+    mysql:
+        image: mysql:5.7
+        restart: always
+        volumes:
+            - ./mysql/database:/var/lib/mysql
+        environment:
+           MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+           MYSQL_DATABASE: ${MYSQL_DATABASE}
+           MYSQL_USER: ${MYSQL_USER}
+           MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        networks:
+            - workers
+#        command:
+#            - --default-authentication-plugin=mysql_native_password
+#            - --sql_mode=""
+#            - --character-set-server=utf8
+#            - --wait_timeout=600
+#            - --init-connect=SET NAMES utf8
+#            - --innodb_strict_mode=OFF
+#            - --default_storage_engine=InnoDB
+#            - --collation-server=utf8_general_ci
+#            - --innodb_log_file_size=256M
+#            - --innodb_buffer_pool_size=1GB
+#            - --max_allowed_packet=20M
+#            - --bulk_insert_buffer_size=20M
+#            - --query_cache_size=32M
+#            - --skip-character-set-client-handshake
+#            - --skip-host-cache
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        depends_on:
+            - mysql
+        env_file:
+            - .env
+        ports:
+            - "8081:80"
+        networks:
+            - workers
+    redis:
+        image: redis
+        ports:
+            - "6379"
+        networks:
+            - workers
