@@ -1,1 +1,1 @@
-cake migrations migrate --plugin Queued
+cake migrations migrate --plugin Queue

@@ -1,1 +1,1 @@
-cake QueuedWorker run
+cake QueueWorker run

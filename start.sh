@@ -35,7 +35,7 @@ docker-compose up -d phpmyadmin
 docker-compose up -d apache
 docker-compose bulid worker-tasker
 sleep 7
-docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) apache cake migrations migrate --plugin Queued
+docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) apache cake migrations migrate --plugin Queue
 docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) apache chown -R www-data:www-data .
 docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) apache chmod 755 -R .
 docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) apache chmod 777 -R ./tmp
@@ -53,7 +53,7 @@ alias worker-folder-owner="docker-compose exec -u $(id -u ${USER}):$(id -g ${USE
 alias worker-folder-permissions="docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) apache chmod 755 -R ."
 alias worker-folder-permissions-tmp="docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) apache chmod 777 -R ./tmp"
 alias worker-folder-permissions-tasks="docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) apache chmod 777 -R ./src/Shell/Task"
-#alias worker-folder-permissions-tasks="docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) apache chmod 777 -R ./vendor/token27/cakephp-queued-plugin/src/Shell/Task"
+#alias worker-folder-permissions-tasks="docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) apache chmod 777 -R ./vendor/token27/cakephp-queue-plugin/src/Shell/Task"
 clear
 echo " "
 echo " "
@@ -72,8 +72,8 @@ echo "### - Execute cake shell"
 echo "### cd ./docker"
 echo "### "
 echo "### worker-cake --help"
-echo "### worker-cake Queued --help"
-echo "### worker-cake QueuedWorker --help"
+echo "### worker-cake Queue --help"
+echo "### worker-cake QueueWorker --help"
 echo "### "
 echo "### - Enter in a running container"
 echo "### docker exec -it [container-id] bash"

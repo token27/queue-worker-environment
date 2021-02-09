@@ -21,10 +21,10 @@ services:
             - "./bash/worker-create-database-tables.sh:/usr/local/bin/apache2-worker-create-database-tables.sh"
             - "./bash/worker-start.sh:/usr/local/bin/apache2-worker-start.sh"
             - "./config/app_local.php:/var/www/html/config/app_local.php"
-            - "./config/app_queued.php:/var/www/html/config/app_queued.php"
+            - "./config/app_queue.php:/var/www/html/config/app_queue.php"
             - "./config/000-default.conf:/etc/apache2/sites-available/000-default.conf"
             - ./tasks:/var/www/html/src/Shell/Task
-            #- ./tasks:/var/www/html/vendor/token27/cakephp-queued-plugin/src/Shell/Task
+            #- ./tasks:/var/www/html/vendor/token27/cakephp-queue-plugin/src/Shell/Task
         networks:
             - workers
     apache:
@@ -52,9 +52,9 @@ services:
             - "./bash/create-plugin-tables.sh:/usr/local/bin/apache2-create-tables.sh"
             - "./config/app_local.php:/var/www/html/config/app_local.php"
             - "./config/000-default.conf:/etc/apache2/sites-available/000-default.conf"
-            - "./config/app_queued.php:/var/www/html/config/app_queued.php"
+            - "./config/app_queue.php:/var/www/html/config/app_queue.php"
             - ./tasks:/var/www/html/src/Shell/Task
-            #- ./tasks:/var/www/html/vendor/token27/cakephp-queued-plugin/src/Shell/Task
+            #- ./tasks:/var/www/html/vendor/token27/cakephp-queue-plugin/src/Shell/Task
         networks:
             - workers
     mysql:

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Queued' => [
+    'Queue' => [
         // seconds of running time after which the PHP process will terminate, 0 or null uses worker timeout * 2
         'default_timeout_php' => 0,
         //

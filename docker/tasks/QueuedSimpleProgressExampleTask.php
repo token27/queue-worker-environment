@@ -7,14 +7,14 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\Shell;
 use Cake\ORM\Locator\LocatorInterface;
 #
-use Queued\Shell\Task\QueuedTask;
-use Queued\Shell\Task\AddInterface;
+use Token27\Queue\Shell\Task\QueueTask;
+use Token27\Queue\Shell\Task\AddInterface;
 use InvalidArgumentException;
 
 /**
- * A Simple QueuedTask example that runs for a while and updates the progress field.
+ * A Simple QueueTask example that runs for a while and updates the progress field.
  */
-class QueuedSimpleProgressExampleTask extends QueuedTask implements AddInterface {
+class QueueSimpleProgressExampleTask extends QueuedTask implements AddInterface {
 
     /**
      * Timeout for run, after which the Task is reassigned to a new worker.
@@ -41,9 +41,9 @@ class QueuedSimpleProgressExampleTask extends QueuedTask implements AddInterface
      * @return void
      */
     public function add() {
-        $this->out('CakePHP Queued Simple Progress Example task.');
+        $this->out('CakePHP Queue Simple Progress Example task.');
         $this->hr();
-        $this->out('This is a very simple but long running example of a QueuedTask.');
+        $this->out('This is a very simple but long running example of a QueueTask.');
         $this->out('I will now add the Job into the Queue.');
         $this->out('This job will need at least 2 minutes to complete.');
         $this->out(' ');
@@ -57,7 +57,7 @@ class QueuedSimpleProgressExampleTask extends QueuedTask implements AddInterface
         $additional_data = [
             'duration' => 1 * MINUTE,
         ];
-        $this->QueuedTasks->addQueuedTask('SimpleProgressExample', $additional_data);
+        $this->QueueJobs->addQueueJob('SimpleProgressExample', $additional_data);
         $this->success('OK, job created, now run the worker');
     }
 
@@ -68,11 +68,11 @@ class QueuedSimpleProgressExampleTask extends QueuedTask implements AddInterface
      *
      * Defaults to 120 seconds
      *
-     * @param string $queuedTaskId The id of the QueuedTask entity
-     * @param array $additional_data The array passed to QueuedTasksTable::addQueuedTask()
+     * @param string $queueJobId The id of the QueueJob entity
+     * @param array $additional_data The array passed to QueueJobsTable::addQueueJob()
      * @return void
      */
-    public function run(string $queuedTaskId, array $additional_data): void {
+    public function run(string $queueJobId, array $additional_data): void {
         $this->hr();
         $this->out('CakePHP Queued Simple Progress Example task.');
         $seconds = !empty($additional_data['duration']) ? (int) $additional_data['duration'] : 2 * MINUTE;
@@ -80,9 +80,9 @@ class QueuedSimpleProgressExampleTask extends QueuedTask implements AddInterface
         $this->out('A total of ' . $seconds . ' seconds need to pass...');
         for ($i = 0; $i < $seconds; $i++) {
             sleep(1);
-            $this->QueuedTasks->updateProgress($queuedTaskId, ($i + 1) / $seconds, 'Status Test ' . ($i + 1) . 's');
+            $this->QueuedJobs->updateProgress($queueJobId, ($i + 1) / $seconds, 'Status Test ' . ($i + 1) . 's');
         }
-        $this->QueuedTasks->updateProgress($queuedTaskId, 1, 'Status Test Done');
+        $this->QueuedJobs->updateProgress($queueJobId, 1, 'Status Test Done');
 
         $this->hr();
         $this->success(' -> Success, the Simple Progress Example Job was run. <-');

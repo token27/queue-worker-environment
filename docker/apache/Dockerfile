@@ -92,11 +92,11 @@ ENV CAKEPHP_BIN=/var/www/html/bin
 RUN chmod +x -R ${CAKEPHP_BIN}
 ENV PATH="${PATH}:${CAKEPHP_BIN}"
 ENV CAKEPHP_TASKS_APP=/var/www/html/src/Shell/Task/
-ENV CAKEPHP_TASKS_PLUGIN=/var/www/html/vendor/token27/cakephp-queued-plugin/src/Shell/Task/
+ENV CAKEPHP_TASKS_PLUGIN=/var/www/html/vendor/token27/cakephp-queue-plugin/src/Shell/Task/
 
 WORKDIR /var/www/html
 # Install plugin
-RUN composer require token27/cakephp-queued-plugin:dev-main --no-interaction
+RUN composer require token27/cakephp-queue-plugin:dev-main --no-interaction
 
 # CakePHP additional
 RUN composer require cakephp/plugin-installer --no-interaction
