@@ -12,8 +12,8 @@
 
 The recommended way to install this app as git:
 ````
-    git clone https://github.com/token27/cakephp-queued-worker-app.git
-    cd ./cakephp-queued-worker-app
+    git clone https://github.com/token27/queue-worker-environment.git
+    cd ./queue-worker-environment
 ````
 
 ### - Install dependencies and folder permissions:
@@ -50,8 +50,8 @@ or start service required
 - Go to folder `/docker` and execute
 ```    
     worker-cake --help
-    worker-cake Queued --help
-    worker-cake QueuedWorkers --help
+    worker-cake Queue --help
+    worker-cake QueueWorkers --help
 ```
 ---
 
@@ -71,7 +71,7 @@ or start service required
 | FOLDER / FILE | Description |
 | ------ | ------  |
 | **/docker/.env** | This file contain your enviroment vars for the container |
-| **/config/app_queued.php** |  The CakePHP Queued Plugin configuration file |
+| **/config/app_queue.php** |  The CakePHP Queue Plugin configuration file |
 | **/config/app_local.php** | The CakePHP 4.x configuration file |
 | **/config/000-default.conf** | The apache vhost site |
 | **/docker/mysql/database** | The mysql data |
